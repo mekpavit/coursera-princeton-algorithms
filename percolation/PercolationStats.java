@@ -5,16 +5,17 @@ import edu.princeton.cs.algs4.StdOut;
 public class PercolationStats {
 
   private static final double CONFIDENCE_95 = 1.96;
-  private final double[] percolationThresholds;
-  private double cacheMean = -1.0;
-  private double cacheStdDev = -1.0;
+  private int sampleSize;
+  private double cacheMean;
+  private double cacheStdDev;
 
   // perform independent trials on an n-by-n grid
   public PercolationStats(int n, int trials) {
     if (n <= 0 || trials <= 0) {
       throw new IllegalArgumentException();
     }
-    percolationThresholds = new double[trials];
+    sampleSize = trials;
+    double[] percolationThresholds = new double[trials];
     for (int i = 0; i < trials; i++) {
       Percolation percolation = new Percolation(n);
       while (!percolation.percolates()) {
@@ -24,32 +25,28 @@ public class PercolationStats {
       }
       percolationThresholds[i] = percolation.numberOfOpenSites() / Double.valueOf(n * n);
     }
+    cacheMean = StdStats.mean(percolationThresholds);
+    cacheStdDev = StdStats.stddev(percolationThresholds);
   }
 
   // sample mean of percolation threshold
   public double mean() {
-    if (cacheMean == -1) {
-      cacheMean = StdStats.mean(percolationThresholds);
-    }
     return cacheMean;
   }
 
   // sample standard deviation of percolation threshold
   public double stddev() {
-    if (cacheStdDev == -1) {
-      cacheStdDev = StdStats.stddev(percolationThresholds);
-    }
     return cacheStdDev;
   }
 
   // low endpoint of 95% confidence interval
   public double confidenceLo() {
-    return mean() - (CONFIDENCE_95 * stddev() / Math.sqrt(percolationThresholds.length));
+    return cacheMean - (CONFIDENCE_95 * cacheStdDev / Math.sqrt(sampleSize));
   }
 
   // high endpoint of 95% confidence interval
   public double confidenceHi() {
-    return mean() + (CONFIDENCE_95 * stddev() / Math.sqrt(percolationThresholds.length));
+    return cacheMean + (CONFIDENCE_95 * cacheStdDev / Math.sqrt(sampleSize));
   }
 
  // test client (see below)

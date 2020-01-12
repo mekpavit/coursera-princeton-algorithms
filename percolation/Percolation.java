@@ -8,8 +8,8 @@ public class Percolation {
   private final int bottomRootId;
   private final WeightedQuickUnionUF unionFind;
   private boolean[] site;
-  private boolean[] fullSite;
   private int numberOfOpenSites = 0;
+  private final WeightedQuickUnionUF unionFindForFull;
 
   // creates n-by-n grid, with all sites initially blocked
   public Percolation(int n) {
@@ -20,8 +20,8 @@ public class Percolation {
     topRootId = 0;
     bottomRootId = n * n + 1;
     unionFind = new WeightedQuickUnionUF(n * n + 2);
+    unionFindForFull = new WeightedQuickUnionUF(n * n + 2);
     site = new boolean[n * n + 2];
-    fullSite = new boolean[n * n + 2];
   }
 
   private void validateRowAndCol(int row, int col) {
@@ -55,13 +55,11 @@ public class Percolation {
     
     if (siteId <= siteSize) {
       unionFind.union(siteId, topRootId);
-      fullSite[siteId] = true;
+      unionFindForFull.union(siteId, topRootId);
     } else {
       if (site[aboveSiteId]) {
         unionFind.union(siteId, aboveSiteId);
-        if (fullSite[aboveSiteId]) {
-          fullSite[siteId] = true;
-        }
+        unionFindForFull.union(siteId, aboveSiteId);
       }
     }
 
@@ -70,27 +68,21 @@ public class Percolation {
     } else {
       if (site[belowSiteId]) {
         unionFind.union(siteId, belowSiteId);
-        if (fullSite[belowSiteId]) {
-          fullSite[siteId] = true;
-        }
+        unionFindForFull.union(siteId, belowSiteId);
       }
     }
 
     if (siteId % siteSize != 1) {
       if (site[leftSiteId]) {
         unionFind.union(siteId, leftSiteId);
-        if (fullSite[leftSiteId]) {
-          fullSite[siteId] = true;
-        }
+        unionFindForFull.union(siteId, leftSiteId);
       }
     }
 
     if (siteId % siteSize != 0) {
       if (site[rightSiteId]) {
         unionFind.union(siteId, rightSiteId);
-        if (fullSite[rightSiteId]) {
-          fullSite[siteId] = true;
-        }
+        unionFindForFull.union(siteId, rightSiteId);
       }
     }
 
@@ -110,7 +102,7 @@ public class Percolation {
     validateRowAndCol(row, col);
 
     int siteId = convert2DTo1DIndice(row, col);
-    return fullSite[siteId];
+    return unionFindForFull.find(siteId) == unionFindForFull.find(topRootId);
   }
 
   // returns the number of open sites
@@ -139,7 +131,7 @@ public class Percolation {
     percolation.open(3, 3);
     StdOut.println(percolation.isFull(3, 1));
     percolation.open(3, 1);
-    // percolation.open(2, 2);
+    percolation.open(3, 2);
     StdOut.println(percolation.isFull(3, 1));
     StdOut.println(percolation.percolates());
   }
