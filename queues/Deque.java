@@ -1,7 +1,8 @@
 import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
-public class Deque<Item> implements Iterable<Item>{
+public class Deque<Item> implements Iterable<Item> {
 
   private static class Node<E> {
     public E value;
@@ -71,7 +72,7 @@ public class Deque<Item> implements Iterable<Item>{
 
   private void validateRemove() {
     if (size == 0) {
-      throw new java.util.NoSuchElementException();
+      throw new NoSuchElementException();
     }
   }
 
@@ -110,6 +111,9 @@ public class Deque<Item> implements Iterable<Item>{
     }
 
     public Item next() {
+      if (!hasNext()) {
+        throw new NoSuchElementException();
+      }
       Item currentItem = current.value;
       current = current.next;
       return currentItem;
@@ -146,14 +150,14 @@ public class Deque<Item> implements Iterable<Item>{
     StdOut.printf("%-100s%-1s%n", "first removeFirst should return 10", (dq3.removeFirst() == 10));
     StdOut.printf("%-100s%-1s%n", "second removeFirst should return 5", (dq3.removeFirst() == 5));
 
-    //removeLast
+    // removeLast
     Deque<Integer> dq4 = new Deque<Integer>();
     dq4.addFirst(20);
     dq4.addFirst(50);
     StdOut.printf("%-100s%-1s%n", "first removeLast should return 20", (dq4.removeLast() == 20));
     StdOut.printf("%-100s%-1s%n", "second removeLast should return 50", (dq4.removeLast() == 50));
 
-    //iterator
+    // iterator
     Deque<Integer> dq5 = new Deque<Integer>();
     dq5.addFirst(50);
     dq5.addLast(20);
@@ -169,6 +173,17 @@ public class Deque<Item> implements Iterable<Item>{
     StdOut.printf("%-100s%-1s%n", "after second item hasNext should still be true", (dq5Interator.hasNext() == true));
     StdOut.printf("%-100s%-1s%n", "third item should be 20", (dq5Interator.next() == 20));
     StdOut.printf("%-100s%-1s%n", "after third item hasNext should be false", (dq5Interator.hasNext() == false));
+
+    // Reproduce error on Coursera
+    Deque<Integer> deque= new Deque<Integer>();
+    deque.addFirst(1);
+    StdOut.printf("%-100s%-1s%n", "removeFirst should return 1", (deque.removeFirst() == 1));
+    deque.addFirst(3);
+    StdOut.printf("%-100s%-1s%n", "removeFirst should return 3", (deque.removeFirst() == 3));
+    deque.addLast(5);
+    StdOut.printf("%-100s%-1s%n", "removeFirst should return 5", (deque.removeFirst() == 5));
+    Iterator<Integer> dequeIterator = deque.iterator();
+    StdOut.printf("%-100s%-1s%n", "hasNext should be false", (dq5Interator.hasNext() == false));
   }
 
 }
