@@ -1,5 +1,6 @@
 import java.util.Comparator;
 import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class Point implements Comparable<Point> {
 
@@ -123,36 +124,36 @@ public class Point implements Comparable<Point> {
    */
   public static void main(String[] args) {
     // compareTo
-    System.out.println("compareTo");
+    StdOut.println("compareTo");
     Point p1 = new Point(6, 20);
     Point p11 = new Point(6, 17);
-    System.out.printf("%-100s%-1s%n", "compareTo should return 1 when compare (6, 20) with (6, 17): ", p1.compareTo(p11) == 1);
+    StdOut.printf("%-100s%-1s%n", "compareTo should return 1 when compare (6, 20) with (6, 17): ", p1.compareTo(p11) == 1);
     Point p12 = new Point(3, 20);
-    System.out.printf("%-100s%-1s%n", "compareTo should return 1 when compare (6, 20) with (3, 20): ", p1.compareTo(p12) == 1);
+    StdOut.printf("%-100s%-1s%n", "compareTo should return 1 when compare (6, 20) with (3, 20): ", p1.compareTo(p12) == 1);
     Point p13 = new Point(3, 23);
-    System.out.printf("%-100s%-1s%n", "compareTo should return -1 when compare (6, 20) with (3, 23): ", p1.compareTo(p13) == -1);
+    StdOut.printf("%-100s%-1s%n", "compareTo should return -1 when compare (6, 20) with (3, 23): ", p1.compareTo(p13) == -1);
     Point p14 = new Point(7, 20);
-    System.out.printf("%-100s%-1s%n", "compareTo should return -1 when compare (6, 20) with (7, 20): ", p1.compareTo(p14) == -1);
+    StdOut.printf("%-100s%-1s%n", "compareTo should return -1 when compare (6, 20) with (7, 20): ", p1.compareTo(p14) == -1);
     Point p15 = new Point(6, 20);
-    System.out.printf("%-100s%-1s%n", "compareTo should return 0 when compare (6, 20) with (6, 20): ", p1.compareTo(p15) == 0);
+    StdOut.printf("%-100s%-1s%n", "compareTo should return 0 when compare (6, 20) with (6, 20): ", p1.compareTo(p15) == 0);
 
     // slopeTo
-    System.out.println("slopeTo");
-    System.out.printf("%-100s%-1s%n", "slopeTo should return positive infinity when input are (6, 20) with (6, 17): ", p1.slopeTo(p11) == Double.POSITIVE_INFINITY);
-    System.out.printf("%-100s%-1s%n", "slopeTo should return 0 when input are (6, 20) with (3, 20): ", p1.slopeTo(p12) == 0.0);
-    System.out.printf("%-100s%-1s%n", "slopeTo should return -1.0 when input are (6, 20) with (3, 23): ", p1.slopeTo(p13) == -1.0);
-    System.out.printf("%-100s%-1s%n", "slopeTo should return 0 when input are (6, 20) with (7, 20): ", p1.slopeTo(p14) == 0.0);
-    System.out.printf("%-100s%-1s%n", "slopeTo should return negative infinity when input are (6, 20) with (6, 20): ", p1.slopeTo(p15) == Double.NEGATIVE_INFINITY);
+    StdOut.println("slopeTo");
+    StdOut.printf("%-100s%-1s%n", "slopeTo should return positive infinity when input are (6, 20) with (6, 17): ", p1.slopeTo(p11) == Double.POSITIVE_INFINITY);
+    StdOut.printf("%-100s%-1s%n", "slopeTo should return 0 when input are (6, 20) with (3, 20): ", p1.slopeTo(p12) == 0.0);
+    StdOut.printf("%-100s%-1s%n", "slopeTo should return -1.0 when input are (6, 20) with (3, 23): ", p1.slopeTo(p13) == -1.0);
+    StdOut.printf("%-100s%-1s%n", "slopeTo should return 0 when input are (6, 20) with (7, 20): ", p1.slopeTo(p14) == 0.0);
+    StdOut.printf("%-100s%-1s%n", "slopeTo should return negative infinity when input are (6, 20) with (6, 20): ", p1.slopeTo(p15) == Double.NEGATIVE_INFINITY);
     Point p16 = new Point(10, 26);
-    System.out.printf("%-100s%-1s%n", "slopeTo should return 1.5 when input are (6, 20) with (10, 26): ", p1.slopeTo(p16) == 1.5);
+    StdOut.printf("%-100s%-1s%n", "slopeTo should return 1.5 when input are (6, 20) with (10, 26): ", p1.slopeTo(p16) == 1.5);
 
     //slopeOrder
     Comparator<Point> p1SlopeComparator = p1.slopeOrder();
-    System.out.println("slopeOrder");
-    System.out.printf("%-100s%-1s%n", "slopeComparator.compare of (6, 20) should return positive infinity when input are (6, 20) with (6, 17): ", p1SlopeComparator.compare(p1, p11) == -1);
-    System.out.printf("%-100s%-1s%n", "slopeComparator.compare of (6, 20) should return positive infinity when input are (6, 17) with (3, 20): ", p1SlopeComparator.compare(p11, p12) == 1);
-    System.out.printf("%-100s%-1s%n", "slopeComparator.compare of (6, 20) should return positive infinity when input are (3, 23) with (6, 20): ", p1SlopeComparator.compare(p13, p15) == 1);
-    System.out.printf("%-100s%-1s%n", "slopeComparator.compare of (6, 20) should return positive infinity when input are (6, 20) with (6, 20): ", p1SlopeComparator.compare(p15, p15) == 0);
+    StdOut.println("slopeOrder");
+    StdOut.printf("%-100s%-1s%n", "slopeComparator.compare of (6, 20) should return positive infinity when input are (6, 20) with (6, 17): ", p1SlopeComparator.compare(p1, p11) < 0);
+    StdOut.printf("%-100s%-1s%n", "slopeComparator.compare of (6, 20) should return positive infinity when input are (6, 17) with (3, 20): ", p1SlopeComparator.compare(p11, p12) > 0);
+    StdOut.printf("%-100s%-1s%n", "slopeComparator.compare of (6, 20) should return positive infinity when input are (3, 23) with (6, 20): ", p1SlopeComparator.compare(p13, p15) > 0);
+    StdOut.printf("%-100s%-1s%n", "slopeComparator.compare of (6, 20) should return positive infinity when input are (6, 20) with (6, 20): ", p1SlopeComparator.compare(p15, p15) == 0);
   }
 
 }
