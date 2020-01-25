@@ -1,6 +1,6 @@
 import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdOut;
 import java.util.Arrays;
 
 public class FastCollinearPoints {
@@ -14,45 +14,63 @@ public class FastCollinearPoints {
 
     validatePoints(points);
 
-    double[] colinearSlope = new double[points.length * points.length];
-    LineSegment[] lineSegments = new LineSegment[points.length * points.length];
+    Point[] startPoints = new Point[points.length * points.length];
+    Point[] endPoints = new Point[points.length * points.length];
     for (int i = 0; i < points.length; i++) {
       Arrays.sort(points);
       Point p = points[i];
       Arrays.sort(points, p.slopeOrder());
+      StdOut.println(Arrays.toString(points));
 
-      double currentSlope = p.slopeTo(points[1]);
-      int numberOfPointsWithCurrentSlope = 1;
-      for (int j = 2; j < points.length; j++) {
-        if (currentSlope != p.slopeTo(points[j]) || j == points.length - 1) {
-          int lastIndexOfCurrentSlope = j - 1;
-          if (currentSlope == p.slopeTo(points[j]) && j == points.length - 1) {
-            lastIndexOfCurrentSlope = j;
-          }
+      int numberOfSameCurretSlope = 0;
+      Point startPointOfCurrentSlope = p;
+      Point endPointOfCurrentSlope = p;
+      for (int j = 1; j < points.length; j++) {
+        double currentSlope = p.slopeTo(points[j]);
+        boolean isLastIndexOfCurrentSlope = false;
+        if (startPointOfCurrentSlope.compareTo(points[j]) > 0) {
+          startPointOfCurrentSlope = points[j];
+        }
+        if (endPointOfCurrentSlope.compareTo(points[j]) < 0) {
+          endPointOfCurrentSlope = points[j];
+        }
+        numberOfSameCurretSlope++;
+        
+        if (j == points.length - 1) {
+          isLastIndexOfCurrentSlope = true;
+        } else if (currentSlope != p.slopeTo(points[j + 1])) {
+          isLastIndexOfCurrentSlope = true;
+        }
+        StdOut.printf("%s %s %s %s %s%n", currentSlope, numberOfSameCurretSlope, isLastIndexOfCurrentSlope, startPointOfCurrentSlope, points[j]);
+        if (isLastIndexOfCurrentSlope) {
+          
+          if (numberOfSameCurretSlope >= 3) {
 
-          if (numberOfPointsWithCurrentSlope >= 3) {
-            boolean isDuplicated = false;
+            boolean isNewCollinear = true;
             for (int k = 0; k < numberOfSegments; k++) {
-              if (currentSlope == colinearSlope[k]) {
-                isDuplicated = true;
+              if (startPointOfCurrentSlope.compareTo(startPoints[k]) == 0 && endPointOfCurrentSlope.compareTo(endPoints[k]) == 0) {
+                isNewCollinear = false;
               }
             }
-            if (!isDuplicated) {
-              colinearSlope[numberOfSegments] = currentSlope;
-              lineSegments[numberOfSegments] = new LineSegment(p, points[lastIndexOfCurrentSlope]);
+
+            if (isNewCollinear) {
+              StdOut.println(new LineSegment(startPointOfCurrentSlope, endPointOfCurrentSlope));
+              startPoints[numberOfSegments] = startPointOfCurrentSlope;
+              endPoints[numberOfSegments] = endPointOfCurrentSlope;
               numberOfSegments++;
             }
+            
           }
-          currentSlope = p.slopeTo(points[j]);
-          numberOfPointsWithCurrentSlope = 1;
-        } else {
-          numberOfPointsWithCurrentSlope++;
+
+          numberOfSameCurretSlope = 0;
+          startPointOfCurrentSlope = p;
+          endPointOfCurrentSlope = p;
         }
       }
     }
     segments = new LineSegment[numberOfSegments];
     for (int i = 0; i < numberOfSegments; i++) {
-      segments[i] = lineSegments[i];
+      segments[i] = new LineSegment(startPoints[i], endPoints[i]);
     }
 
   }
@@ -67,7 +85,7 @@ public class FastCollinearPoints {
 
     Arrays.sort(copyOfPoints);
     for (int i = 1; i < copyOfPoints.length; i++) {
-      if (copyOfPoints[i] == copyOfPoints[i - 1]) {
+      if (copyOfPoints[i].compareTo(copyOfPoints[i - 1]) == 0) {
         throw new IllegalArgumentException();
       }
     }

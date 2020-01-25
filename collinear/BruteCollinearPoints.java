@@ -48,7 +48,7 @@ public class BruteCollinearPoints {
 
     Arrays.sort(copyOfPoints);
     for (int i = 1; i < copyOfPoints.length; i++) {
-      if (copyOfPoints[i] == copyOfPoints[i - 1]) {
+      if (copyOfPoints[i].compareTo(copyOfPoints[i - 1]) == 0) {
         throw new IllegalArgumentException();
       }
     }
