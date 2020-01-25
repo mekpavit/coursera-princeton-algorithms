@@ -86,15 +86,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     int currentIndex = 0;
 
     public RandomizedQueueIterator() {
-      Item[] tempS = (Item[]) new Object[size];
+
       for (int i = 0; i < size; i++) {
-        tempS[i] = s[i];
+        randomizedS[i] = s[i];
       }
+
       for (int i = 0; i < size; i++) {
-        int randomizedSIndex = StdRandom.uniform(0, size - i);
-        randomizedS[i] = tempS[randomizedSIndex];
-        tempS[randomizedSIndex] = tempS[size - 1 - i];
-        tempS[size - 1 - i] = null;
+        int randomizedSIndex = StdRandom.uniform(i, size);
+        Item temp = randomizedS[i];
+        randomizedS[i] = randomizedS[randomizedSIndex];
+        randomizedS[randomizedSIndex] = temp;
       }
     }
 
