@@ -13,17 +13,17 @@ public class Point implements Comparable<Point> {
    * @param  y the <em>y</em>-coordinate of the point
    */
   public Point(int x, int y) {
-      /* DO NOT MODIFY */
-      this.x = x;
-      this.y = y;
+    /* DO NOT MODIFY */
+    this.x = x;
+    this.y = y;
   }
 
   /**
    * Draws this point to standard draw.
    */
   public void draw() {
-      /* DO NOT MODIFY */
-      StdDraw.point(x, y);
+    /* DO NOT MODIFY */
+    StdDraw.point(x, y);
   }
 
   /**
@@ -33,8 +33,8 @@ public class Point implements Comparable<Point> {
    * @param that the other point
    */
   public void drawTo(Point that) {
-      /* DO NOT MODIFY */
-      StdDraw.line(this.x, this.y, that.x, that.y);
+    /* DO NOT MODIFY */
+    StdDraw.line(this.x, this.y, that.x, that.y);
   }
 
   /**
@@ -53,7 +53,7 @@ public class Point implements Comparable<Point> {
     if (x == that.x && y != that.y) { return Double.POSITIVE_INFINITY; }
     else if (y == that.y && x != that.x) { return 0.0; }
     else if (x == that.x && y == that.y) { return Double.NEGATIVE_INFINITY; }
-    else { return (that.y - y) / (that.x - x); }
+    else { return (that.y - y) / (double) (that.x - x); }
 
   }
 
@@ -143,7 +143,9 @@ public class Point implements Comparable<Point> {
     System.out.printf("%-100s%-1s%n", "slopeTo should return -1.0 when input are (6, 20) with (3, 23): ", p1.slopeTo(p13) == -1.0);
     System.out.printf("%-100s%-1s%n", "slopeTo should return 0 when input are (6, 20) with (7, 20): ", p1.slopeTo(p14) == 0.0);
     System.out.printf("%-100s%-1s%n", "slopeTo should return negative infinity when input are (6, 20) with (6, 20): ", p1.slopeTo(p15) == Double.NEGATIVE_INFINITY);
-    
+    Point p16 = new Point(10, 26);
+    System.out.printf("%-100s%-1s%n", "slopeTo should return 1.5 when input are (6, 20) with (10, 26): ", p1.slopeTo(p16) == 1.5);
+
     //slopeOrder
     Comparator<Point> p1SlopeComparator = p1.slopeOrder();
     System.out.println("slopeOrder");
