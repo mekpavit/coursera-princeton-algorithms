@@ -20,7 +20,6 @@ public class FastCollinearPoints {
       Arrays.sort(points);
       Point p = points[i];
       Arrays.sort(points, p.slopeOrder());
-      StdOut.println(Arrays.toString(points));
 
       int numberOfSameCurretSlope = 0;
       Point startPointOfCurrentSlope = p;
@@ -41,7 +40,7 @@ public class FastCollinearPoints {
         } else if (currentSlope != p.slopeTo(points[j + 1])) {
           isLastIndexOfCurrentSlope = true;
         }
-        StdOut.printf("%s %s %s %s %s%n", currentSlope, numberOfSameCurretSlope, isLastIndexOfCurrentSlope, startPointOfCurrentSlope, points[j]);
+
         if (isLastIndexOfCurrentSlope) {
           
           if (numberOfSameCurretSlope >= 3) {
@@ -54,7 +53,6 @@ public class FastCollinearPoints {
             }
 
             if (isNewCollinear) {
-              StdOut.println(new LineSegment(startPointOfCurrentSlope, endPointOfCurrentSlope));
               startPoints[numberOfSegments] = startPointOfCurrentSlope;
               endPoints[numberOfSegments] = endPointOfCurrentSlope;
               numberOfSegments++;
