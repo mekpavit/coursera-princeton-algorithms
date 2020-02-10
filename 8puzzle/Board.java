@@ -1,12 +1,13 @@
 import edu.princeton.cs.algs4.StdOut;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import edu.princeton.cs.algs4.Queue;
 
 public class Board {
 
   private int[][] ts;
   private int emptyTileRow;
   private int emptyTileCol;
+  private int hamming = 0;
+  private int manhattan = 0;
 
   public Board(int[][] tiles) {
     validateTiles(tiles);
@@ -21,6 +22,27 @@ public class Board {
           emptyTileRow = row;
           emptyTileCol = col;
         }
+      }
+    }
+
+    for (int row = 0; row < ts.length; row++) {
+      for (int col = 0; col < ts.length; col++) {
+        if (ts[row][col] == 0) {
+          continue;
+        }
+        int goalTile = goalTile(row, col);
+        if (ts[row][col] != goalTile) {
+          hamming++;
+        }
+      }
+    }
+
+    for (int row = 0; row < ts.length; row++) {
+      for (int col = 0; col < ts.length; col++) {
+        if (ts[row][col] == 0) {
+          continue;
+        }
+        manhattan = manhattan + Math.abs(row - goalTileRow(ts[row][col])) + Math.abs(col - goalTileCol(ts[row][col]));
       }
     }
 
@@ -72,26 +94,11 @@ public class Board {
   }
 
   public int hamming() {
-    int hammingDistance = 0;
-    for (int row = 0; row < ts.length; row++) {
-      for (int col = 0; col < ts.length; col++) {
-        int goalTile = goalTile(row, col);
-        if (ts[row][col] != goalTile) {
-          hammingDistance++;
-        }
-      }
-    }
-    return hammingDistance;
+    return hamming;
   }
 
   public int manhattan() {
-    int manhattanDistance = 0;
-    for (int row = 0; row < ts.length; row++) {
-      for (int col = 0; col < ts.length; col++) {
-        manhattanDistance = manhattanDistance + Math.abs(row - goalTileRow(ts[row][col])) + Math.abs(col - goalTileCol(ts[row][col]));
-      }
-    }
-    return manhattanDistance;
+    return manhattan;
   }
 
   public boolean isGoal() {
@@ -119,6 +126,11 @@ public class Board {
     }
 
     Board that = (Board) y;
+
+    if (this.ts.length != that.ts.length) {
+      return false;
+    }
+
     for (int row = 0; row < ts.length; row++) {
       for (int col = 0; col < ts.length; col++) {
         if (ts[row][col] != that.ts[row][col]) {
@@ -131,75 +143,29 @@ public class Board {
 
   public Iterable<Board> neighbors() {
 
-    Board[] nieghbors = new Board[numberOfNeighbors()];
+    Queue<Board> neighbors = new Queue<Board>();
 
-    int neightborIndex = 0;
     if (emptyTileRow != 0) {
       exchange(emptyTileRow, emptyTileCol, emptyTileRow - 1, emptyTileCol);
-      nieghbors[neightborIndex] = new Board(ts);
+      neighbors.enqueue(new Board(ts));
       exchange(emptyTileRow, emptyTileCol, emptyTileRow - 1, emptyTileCol);
-      neightborIndex++;
     }
     if (emptyTileCol != ts.length - 1) {
       exchange(emptyTileRow, emptyTileCol, emptyTileRow, emptyTileCol + 1);
-      nieghbors[neightborIndex] = new Board(ts);
+      neighbors.enqueue(new Board(ts));
       exchange(emptyTileRow, emptyTileCol, emptyTileRow, emptyTileCol + 1);
-      neightborIndex++;
     }
     if (emptyTileRow != ts.length - 1) {
       exchange(emptyTileRow, emptyTileCol, emptyTileRow + 1, emptyTileCol);
-      nieghbors[neightborIndex] = new Board(ts);
+      neighbors.enqueue(new Board(ts));
       exchange(emptyTileRow, emptyTileCol, emptyTileRow + 1, emptyTileCol);
-      neightborIndex++;
     }
     if (emptyTileCol != 0) {
       exchange(emptyTileRow, emptyTileCol, emptyTileRow, emptyTileCol - 1);
-      nieghbors[neightborIndex] = new Board(ts);
+      neighbors.enqueue(new Board(ts));
       exchange(emptyTileRow, emptyTileCol, emptyTileRow, emptyTileCol - 1);
-      neightborIndex++;
     }
-    return new IterableBoards(nieghbors);
-
-  }
-
-  private class IterableBoards implements Iterable<Board> {
-
-    Board[] boards;
-
-    public IterableBoards(Board[] bds) {
-      boards = bds;
-    }
-
-    public Iterator<Board> iterator() {
-      return new BoardIterator();
-    }
-
-    private class BoardIterator implements Iterator<Board> {
-
-      int currentIndex;
-
-      public BoardIterator() {
-        currentIndex = 0;
-      }
-
-      public boolean hasNext() {
-        return currentIndex < boards.length;
-      }
-
-      public Board next() {
-        if (!hasNext()) {
-          throw new NoSuchElementException();
-        }
-        Board currentBoard = boards[currentIndex];
-        currentIndex++;
-        return currentBoard;
-      }
-
-      public void remove() {
-        throw new UnsupportedOperationException();
-      }
-
-    }
+    return neighbors;
 
   }
 
@@ -208,17 +174,6 @@ public class Board {
     ts[row1][col1] = ts[row2][col2];
     ts[row2][col2] = temp;
   }
-
-  private int numberOfNeighbors() {
-    int numberOfNeighbors = 4;
-    if (emptyTileRow == 0) {
-      numberOfNeighbors--;
-    }
-    if (emptyTileCol == 0) {
-      numberOfNeighbors--;
-    }
-    return numberOfNeighbors;
-  } 
 
   public Board twin() {
     int rowToSwap = 0;
